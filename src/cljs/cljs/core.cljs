@@ -855,7 +855,7 @@ reduces them without incurring seq initialization"
 
       (array? coll)
       (alength coll)
-    
+
       (string? coll)
       (alength coll)
 
@@ -899,14 +899,14 @@ reduces them without incurring seq initialization"
          (array? coll)
          (when (< n (.-length coll))
            (aget coll n))
-         
+
          (string? coll)
          (when (< n (.-length coll))
            (aget coll n))
 
          (native-satisfies? IIndexed coll)
          (-nth coll n)
-         
+
          :else
          (if (satisfies? ISeq coll)
            (linear-traversal-nth coll n)
@@ -924,12 +924,12 @@ reduces them without incurring seq initialization"
          (if (< n (.-length coll))
            (aget coll n)
            not-found)
-         
+
          (string? coll)
          (if (< n (.-length coll))
            (aget coll n)
            not-found)
-         
+
          (native-satisfies? IIndexed coll)
          (-nth coll n)
 
@@ -953,14 +953,14 @@ reduces them without incurring seq initialization"
         (array? o)
         (when (< k (.-length o))
           (aget o k))
-        
+
         (string? o)
         (when (< k (.-length o))
           (aget o k))
 
         (native-satisfies? ILookup o)
         (-lookup o k)
-        
+
         :else nil)))
   ([o k not-found]
     (if-not (nil? o)
@@ -972,7 +972,7 @@ reduces them without incurring seq initialization"
         (if (< k (.-length o))
           (aget o k)
           not-found)
-        
+
         (string? o)
         (if (< k (.-length o))
           (aget o k)
@@ -1373,7 +1373,7 @@ reduces them without incurring seq initialization"
 
        (string? coll)
        (array-reduce coll f)
-       
+
        (native-satisfies? IReduce coll)
        (-reduce coll f)
 
@@ -1386,10 +1386,10 @@ reduces them without incurring seq initialization"
 
        (array? coll)
        (array-reduce coll f val)
-      
+
        (string? coll)
        (array-reduce coll f val)
-       
+
        (native-satisfies? IReduce coll)
        (-reduce coll f val)
 
@@ -2009,7 +2009,7 @@ reduces them without incurring seq initialization"
 
   ISeqable
   (-seq [coll] coll)
-  
+
   IReduce
   (-reduce [coll f] (seq-reduce f coll))
   (-reduce [coll f start] (seq-reduce f start coll)))
@@ -2028,7 +2028,7 @@ reduces them without incurring seq initialization"
 (deftype Keyword [ns name fqn ^:mutable _hash]
   Object
   (toString [_] (str ":" fqn))
-  
+
   IEquiv
   (-equiv [_ other]
     (if (instance? Keyword other)
@@ -2208,7 +2208,7 @@ reduces them without incurring seq initialization"
   Object
   (toString [coll]
     (pr-str* coll))
-  
+
   IWithMeta
   (-with-meta [coll m]
     (ChunkedCons. chunk more m __hash))
@@ -4087,7 +4087,7 @@ reduces them without incurring seq initialization"
   Object
   (toString [coll]
     (pr-str* coll))
-  
+
   IMeta
   (-meta [coll] _meta)
 
@@ -4115,7 +4115,7 @@ reduces them without incurring seq initialization"
 
   IHash
   (-hash [coll] (hash-coll coll))
-  
+
   ISeq
   (-first [coll]
     [(aget arr i) (aget arr (inc i))])
@@ -4250,7 +4250,7 @@ reduces them without incurring seq initialization"
 
 (set! cljs.core.PersistentArrayMap.fromArray
   (fn [arr ^boolean no-clone]
-    (let [arr (if no-clone arr (aclone arr))] 
+    (let [arr (if no-clone arr (aclone arr))]
       (let [cnt (/ (alength arr) 2)]
         (PersistentArrayMap. nil cnt arr nil)))))
 
@@ -5878,7 +5878,7 @@ reduces them without incurring seq initialization"
 
   IHash
   (-hash [coll] (hash-coll coll))
-  
+
   ISeq
   (-first [coll]
     (let [^not-native me (-first mseq)]
@@ -6661,11 +6661,11 @@ reduces them without incurring seq initialization"
               ;; handle CLJS ctors
               ^boolean (.-cljs$lang$type obj)
               (.cljs$lang$ctorPrWriter obj obj writer opts)
-              
+
               ; Use the new, more efficient, IPrintWithWriter interface when possible.
               (implements? IPrintWithWriter obj)
               (-pr-writer ^not-native obj writer opts)
-              
+
               (or (identical? (type obj) js/Boolean) (number? obj))
               (-write writer (str obj))
 
@@ -6886,7 +6886,7 @@ reduces them without incurring seq initialization"
 (extend-protocol IComparable
   Subvec
   (-compare [x y] (compare-indexed x y))
-  
+
   PersistentVector
   (-compare [x y] (compare-indexed x y)))
 
@@ -7132,7 +7132,7 @@ Maps become Objects. Arbitrary keys are encoded to by key->js."
   vectors, and JavaScript objects into ClojureScript maps.  With
   option ':keywordize-keys true' will convert object fields from
   strings to keywords."
-  ([x] (js->clj x {:keywordize-keys false}))
+  ([x] (js->clj x :keywordize-keys false))
   ([x & opts]
     (cond
       (satisfies? IEncodeClojure x)
@@ -7151,7 +7151,7 @@ Maps become Objects. Arbitrary keys are encoded to by key->js."
 
                   (array? x)
                   (vec (map thisfn x))
-                   
+
                   (identical? (type x) js/Object)
                   (into {} (for [k (js-keys x)]
                              [(keyfn k) (thisfn (aget x k))]))
